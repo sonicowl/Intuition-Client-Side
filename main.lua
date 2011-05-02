@@ -1,3 +1,4 @@
+require("cleangroup")
 display.setStatusBar( display.HiddenStatusBar ) 
 
 _W = display.contentWidth;

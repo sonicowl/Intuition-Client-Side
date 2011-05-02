@@ -10,25 +10,254 @@ require("Rss_SyndicationItem")
 
 function new()
 	local g = display.newGroup()
+	local question = display.newGroup()
+	local answersGroup = display.newGroup()
+	local remainingGroup = display.newGroup()
+	local currentQuestionNumber = 1;
 	
-	local callback = function(rss)
-		local syndication = SyndicationFeed:new("NRK Feed")
-		syndication:parseFeed(rss)
+	score = require ("score")
+	
+	local remaining;
+	
+	local border = 5
 
+	local scoreInfo = score.getInfo()
+
+	score.init({
+	x = 40,
+	y = 5}
+	)
+	score.setScore(0)
+
+
+	--------------------------------------------------------------------------
+	--								SCORE									--
+	--------------------------------------------------------------------------
+
+	local callback = function(rss)
+		syndication = SyndicationFeed:new("NRK Feed")
+		syndication:parseFeed(rss)
+	
 		local items = syndication:getItems()
-		for i=1, #items do
-			local item = items[i]
-			print(i .. "-" .. item.name);
 		
+		if (table.getn(items)>1) then
+			-- we have a next question --
+			
+			---How many questions left?
+			print (table.getn(items));
+
+			getCurrentQuestion(currentQuestionNumber);
+			
+			local remainingItems = syndication:getItems()
+
+			numberOfItems = table.getn(remainingItems)/2;
+
+
+			remaining = display.newText (numberOfItems, 25,455, native.systemFont, 12)
+			remaining:setTextColor(255,255,255)
+			--> Line one of the question
+			remainingGroup:insert(remaining)
+			g:insert(remainingGroup)
+			
+		end
+		--[[
+		for i=1, #items do
+		local item = items[i]
+			print(i .. "-" .. item.question);
 			local itemGroup = display.newGroup()
-			local title = display.newText(item.name, 10, 10, "Helvetica", 16)
+			local title = display.newText(item.question, 10, 10, "Helvetica", 16)
 			itemGroup:insert(title)
 			itemGroup.y = 10 + (40 * (i-1))
 			g:insert(itemGroup) 
 		end
+		--]]
 	end
 	
-	UrlLoader:new("http://localhost/rest_api/public/global/format/json", callback)
+	function getCurrentQuestion(n)
+		
+		--------------------------------------------------------------------------
+		--								QUESTION								--
+		--------------------------------------------------------------------------
+		current = nil;
+		-- Get Current Question
+		current = syndication:getItems()
+		current = syndication:getCurrentItem(n)
+		
+		print (current.question);
+		
+		local question1 = display.newText (current.question, 25,60, native.systemFont, 12)
+		question1:setTextColor(255,255,255)
+		--> Line one of the question
+		
+		question:insert(question1)
+		answer1 = nil
+		--------------------------------------------------------------------------
+		--								ANSWERS									--
+		--------------------------------------------------------------------------
+		local answer1 = display.newImage ("button.png")
+		answer1.x = 160
+		answer1.y = 125
+		answer1.id = 1;
+		answer1.name = current.answer1;
+		question:insert(answer1)
+		answer1:addEventListener("touch", selectAnswer)
+
+		local answer2 = display.newImage ("button.png")
+		answer2.x = 160
+		answer2.y = 185
+		answer2.id = 2;
+		answer2.name = current.answer2;
+		question:insert(answer2)
+		answer2:addEventListener("touch", selectAnswer)
+
+		local answer3 = display.newImage ("button.png")
+		answer3.x = 160
+		answer3.y = 245
+		answer3.id = 3;
+		answer3.name = current.answer3;
+		question:insert(answer3)
+		answer3:addEventListener("touch", selectAnswer)
+		
+		local answer4 = display.newImage ("button.png")
+		answer4.x = 160
+		answer4.y = 305
+		answer4.id = 4;
+		answer4.name = current.answer4;
+		question:insert(answer4)
+		answer4:addEventListener("touch", selectAnswer)
+		
+		local answer5 = display.newImage ("button.png")
+		answer5.x = 160
+		answer5.y = 365
+		answer5.id = 5;
+		answer5.name = current.answer5;
+		question:insert(answer5)
+		answer5:addEventListener("touch", selectAnswer)
+		
+		local answer6 = display.newImage ("button.png")
+		answer6.x = 160
+		answer6.y = 425
+		answer6.id = 6;
+		answer6.name = current.answer6;
+		question:insert(answer6)
+		answer6:addEventListener("touch", selectAnswer)
+		
+		--> Places all three answer buttons and inserts them into localGroup
+		---------------------------------------------------------------------------
+
+		local a1 = display.newText (current.answer1, 38, 115, native.systemFont, 14)
+		a1:setTextColor(0,0,0)
+		question:insert(a1)
+		
+		local a2 = display.newText (current.answer2, 38, 175, native.systemFont, 14)
+		a2:setTextColor (0,0,0)
+		question:insert(a2)
+
+		local a3 = display.newText (current.answer3, 38, 235, native.systemFont, 14)
+		a3:setTextColor (0,0,0)
+		question:insert(a3)
+		
+		local a4 = display.newText (current.answer4, 38, 295, native.systemFont, 14)
+		a4:setTextColor (0,0,0)
+		question:insert(a4)
+		
+		local a5 = display.newText (current.answer5, 38, 355, native.systemFont, 14)
+		a5:setTextColor (0,0,0)
+		question:insert(a5)
+		
+		local a6 = display.newText (current.answer6, 38, 415, native.systemFont, 14)
+		a6:setTextColor (0,0,0)
+		question:insert(a6)
+		--> Inserts text on each button, puts text in localGroup
+		---------------------------------------------------------------------------
+		
+		g:insert(question);
+		
+	end
+	
+	function selectAnswer(event)
+		if event.phase == "ended" then
+		
+		--- Change Score
+		score.setScore (score.getScore()+107)
+		
+		print (event.target.name);
+			
+		--- show results
+		showResults()
+		--- mark question as completed
+		syndication:setCompleted()
+		--- mark which question was selected - 1 - 6
+
+
+		end
+	end
+	
+	function showResults()
+		--> Places all three answer buttons and inserts them into localGroup
+		---------------------------------------------------------------------------
+		local a1 = display.newText (current.qtanswer1, 280, 115, native.systemFont, 14)
+		a1:setTextColor(0,0,0)
+		answersGroup:insert(a1)
+		
+		local a2 = display.newText (current.qtanswer2, 280, 175, native.systemFont, 14)
+		a2:setTextColor (0,0,0)
+		answersGroup:insert(a2)
+
+		local a3 = display.newText (current.qtanswer3, 280, 235, native.systemFont, 14)
+		a3:setTextColor (0,0,0)
+		answersGroup:insert(a3)
+		
+		local a4 = display.newText (current.qtanswer4, 280, 295, native.systemFont, 14)
+		a4:setTextColor (0,0,0)
+		answersGroup:insert(a4)
+		
+		local a5 = display.newText (current.qtanswer5, 280, 355, native.systemFont, 14)
+		a5:setTextColor (0,0,0)
+		answersGroup:insert(a5)
+		
+		local a6 = display.newText (current.qtanswer6, 280, 415, native.systemFont, 14)
+		a6:setTextColor (0,0,0)
+		answersGroup:insert(a6)
+		
+		g:insert(answersGroup);
+		
+	end
+	
+	
+	function getNextQuestion(event)
+		if event.phase == "ended" then
+			print('next')
+			print('current is' .. current.question)
+			
+			g:remove(remaining)
+			
+			numberOfItems = numberOfItems - 1;
+			
+			remaining = display.newText (numberOfItems, 25,455, native.systemFont, 12)
+			remaining:setTextColor(255,255,255)
+			g:insert(remaining);
+			
+			
+			--- remove current question
+			cleanGroup( question )
+			question = nil
+			question = display.newGroup();
+			--- insert new question
+			getCurrentQuestion(currentQuestionNumber)
+			currentQuestionNumber = currentQuestionNumber+1;
+			
+		end
+	end
+	
+	local next = display.newImage("next.png")
+	next.x = 260
+	next.y = 35
+	g:insert(next)
+	next:addEventListener("touch", getNextQuestion)
+
+	
+	UrlLoader:new("http://localhost/intuition_rest/public/question/format/json", callback)
 	
 	return g
 end
