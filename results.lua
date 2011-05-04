@@ -5,23 +5,23 @@ function new()
 	local localGroup = display.newGroup();
 	local instructions_bg = display.newImageRect("images/bg.png", 640, 959);
 	instructions_bg:setReferencePoint(display.CenterReferencePoint);
-	instructions_bg.x = _W/2; instructions.y = _H/2;
+	instructions_bg.x = _W/2; instructions_bg.y = _H/2;
 	instructions_bg.scene = "menu";
 	
-	local sceneTitle = display.newImageRect("images/title_instructions.png", 303, 49);
-	sceneTitle:setReferencePoint(display.CenterReferencePoint);
-	sceneTitle.x = _W/2 - 3; 
-	sceneTitle.y = sceneTitle.height*1.6; 
+	local resultsSceneTitle = display.newImageRect("images/title_my_results.png", 260, 49);
+	resultsSceneTitle:setReferencePoint(display.CenterReferencePoint);
+	resultsSceneTitle.x = _W/2 - 3; 
+	resultsSceneTitle.y = resultsSceneTitle.height*1.6; 
 	
-	--[[local sceneTitle = display.newText("Instructions",30,50, nil, 35);
-	sceneTitle:setTextColor(255, 255, 255);--]]
+	--[[local resultsSceneTitle = display.newText("Instructions",30,50, nil, 35);
+	resultsSceneTitle:setTextColor(255, 255, 255);--]]
 	--[[
-	local instructionsText = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." --]]
+	local resultsText = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." --]]
 	
-	local instructionsText = display.newImageRect("images/instructions.png", 298, 115);
-	instructionsText:setReferencePoint(display.CenterReferencePoint);
-	instructionsText.x = _W/2 - 3; 
-	instructionsText.y = sceneTitle.height*3+30;
+	local resultsText = display.newImageRect("images/instructions.png", 298, 115);
+	resultsText:setReferencePoint(display.CenterReferencePoint);
+	resultsText.x = _W/2 - 3; 
+	resultsText.y = resultsSceneTitle.height*3+30;
 
 	local function autoWrappedText(text, font, size, color, width)
 	--print("text: " .. text)
@@ -81,15 +81,15 @@ function new()
 	  return result
 	end
 	
---[[[	local instructionsTextFormatted = autoWrappedText(instructionsText, nil, 14, {255, 255, 255}, 280)
-	instructionsTextFormatted.y = 120;
-	instructionsTextFormatted.x = 30;
-	localGroup:insert(instructionsTextFormatted);
+--[[[	local resultsTextFormatted = autoWrappedText(resultsText, nil, 14, {255, 255, 255}, 280)
+	resultsTextFormatted.y = 120;
+	resultsTextFormatted.x = 30;
+	localGroup:insert(resultsTextFormatted);
 	
 	--]]
 	localGroup:insert(instructions_bg);
-	localGroup:insert(sceneTitle);
-	localGroup:insert(instructionsText);
+	localGroup:insert(resultsSceneTitle);
+	localGroup:insert(resultsText);
 	
 	function changeScene(e)
 		if(e.phase == "ended") then

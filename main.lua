@@ -1,4 +1,6 @@
 require("cleangroup")
+TextCandy = require("lib_text_candy")
+
 display.setStatusBar( display.HiddenStatusBar ) 
 
 _W = display.contentWidth;
