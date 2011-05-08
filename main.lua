@@ -1,4 +1,6 @@
 require("cleangroup")
+require "toggle"
+
 TextCandy = require("lib_text_candy")
 
 display.setStatusBar( display.HiddenStatusBar ) 

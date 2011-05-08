@@ -1,18 +1,7 @@
--- A sample score keeping display
--- This updates a display for a numeric score
+Score = class("Score")
 
-
--- Example usage:
---	Place the score at 50,50
--- 		score.init( { x = 50, y = 50 } )
---	Update the score to current value + 10:
---		score.setScore( score.getScore() + 10 )
-
-
-module(..., package.seeall)
- 
 -- Init images. This creates a map of characters to the names of their corresponding images.
- local numbers = { 
+Score.numbers = { 
 	[string.byte("0")] = "0.png",
 	[string.byte("1")] = "1.png",
 	[string.byte("2")] = "2.png",
@@ -26,21 +15,17 @@ module(..., package.seeall)
 	[string.byte(" ")] = "space.png",
 }
 
-
 -- score components
-local theScoreGroup = display.newGroup()
-local theBackgroundBorder = 10
+Score.theScoreGroup = display.newGroup()
+Score.theBackgroundBorder = 10
 
 
-
-
-local numbersGroup = display.newGroup()
-theScoreGroup:insert( numbersGroup )
+Score.numbersGroup = display.newGroup()
+Score.theScoreGroup:insert(Score.numbersGroup )
 
 
 -- the current score
-local theScore = 0
-
+Score.theScore = 0
 
 -- the location of the score image
 
@@ -48,10 +33,8 @@ local theScore = 0
 -- initialize the score
 -- 		params.x <= X location of the score
 -- 		params.y <= Y location of the score
-function init( params )
-	theScoreGroup.x = params.x
-	theScoreGroup.y = params.y
-	setScore( 0 )
+function Score:initialize()
+	-- nothing for now
 end
 
 
@@ -63,27 +46,18 @@ end
 --		result.contentWidth <= panel width
 --		result.contentHeight <= panel height
 --		result.score <= current score
-function getInfo()
-	return {
-		x = theScoreGroup.x,
-		y = theScoreGroup.y,
-		xmax = theScoreGroup.x + theScoreGroup.contentWidth,
-		ymax = theScoreGroup.y + theScoreGroup.contentHeight,
-		contentWidth = theScoreGroup.contentWidth,
-		contentHeight = theScoreGroup.contentHeight,
-		score = theScore
-	}
+function Score:getInfo()
 end
 
 
 -- update display of the current score.
 -- this is called by setScore, so normally this should not be called
-function update()
+function Score:update()
 	-- remove old numerals
-	theScoreGroup:remove(1)
+--[[	Score.theScoreGroup:remove(1)
 
 	local numbersGroup = display.newGroup()
-	theScoreGroup:insert( numbersGroup )
+	Score.theScoreGroup:insert( numbersGroup )
 
 	-- go through the score, right to left
 	local scoreStr = tostring( theScore )
@@ -104,7 +78,7 @@ function update()
 
 
 		-- put it in the score group
-		numbersGroup:insert( characterImage )
+		Score.numbersGroup:insert( characterImage )
 		
 		-- place the digit
 		characterImage.x = x - characterImage.width / 2
@@ -114,20 +88,19 @@ function update()
 
 		-- 
 		i = i - 1
-	end
+	end --]]
 end
 
 
 -- get current score
-function getScore()
-	return theScore
+function Score:getScore()
+	return Score.theScore
 end
 
 
 -- set score to value
 --	score <= score value
-function setScore( score )
-	theScore = score
-	
-	update()
+function Score:setScore( score )
+	Score.theScore = score
+--	Score.update()
 end

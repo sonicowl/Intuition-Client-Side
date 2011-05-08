@@ -77,6 +77,6 @@ end
 
 function QuestionsFeed:setCompleted()
 	QuestionsFeed.items[1].completed = 1;
-	table.remove(QuestionsFeed.notCompletedQuestions, QuestionsFeed.notCompletedQuestions[1])
+--	table.remove(QuestionsFeed.notCompletedQuestions, QuestionsFeed.notCompletedQuestions[1])
 
 end
