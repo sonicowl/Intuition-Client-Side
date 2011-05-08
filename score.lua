@@ -29,11 +29,9 @@ module(..., package.seeall)
 
 -- score components
 local theScoreGroup = display.newGroup()
-local theBackground = display.newImage( "scorebg.png" )
 local theBackgroundBorder = 10
 
 
-theScoreGroup:insert( theBackground )
 
 
 local numbersGroup = display.newGroup()
@@ -82,23 +80,20 @@ end
 -- this is called by setScore, so normally this should not be called
 function update()
 	-- remove old numerals
-	theScoreGroup:remove(2)
-
+	theScoreGroup:remove(1)
 
 	local numbersGroup = display.newGroup()
 	theScoreGroup:insert( numbersGroup )
 
-
 	-- go through the score, right to left
 	local scoreStr = tostring( theScore )
-
 
 	local scoreLen = string.len( scoreStr )
 	local i = scoreLen	
 
 
 	-- starting location is on the right. notice the digits will be centered on the background
-	local x = theScoreGroup.contentWidth - theBackgroundBorder
+	local x = theScoreGroup.contentWidth
 	local y = theScoreGroup.contentHeight / 2
 	
 	while i > 0 do

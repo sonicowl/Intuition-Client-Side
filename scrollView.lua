@@ -58,7 +58,7 @@ function new(params)
 					-- Start tracking velocity
 					Runtime:addEventListener("enterFrame", trackVelocity)
 	                
-	                -- Subsequent touch events will target button even if they are outside the contentBounds of button
+	                -- Subsequent touch events will target button even if they are outside the stageBounds of button
 	                display.getCurrentStage():setFocus( self )
 	                self.isFocus = true
 	 

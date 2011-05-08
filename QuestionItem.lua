@@ -1,25 +1,25 @@
-SyndicationItem = class("SyndicationItem")
+QuestionItem = class("QuestionItem")
 
 require "sqlite3"
 
-SyndicationItem.id = nil;
-SyndicationItem.question = '';
-SyndicationItem.totalViews = '';
-SyndicationItem.answer1 = '';
-SyndicationItem.answer2 = '';
-SyndicationItem.answer3 = '';
-SyndicationItem.answer4 = '';
-SyndicationItem.answer5 = '';
-SyndicationItem.answer6 = '';
-SyndicationItem.qtanswer1 = '';
-SyndicationItem.qtanswer2 = '';
-SyndicationItem.qtanswer3 = '';
-SyndicationItem.qtanswer4 = '';
-SyndicationItem.qtanswer5 = '';
-SyndicationItem.qtanswer6 = '';
-SyndicationItem.selectedAnswer = '';
+QuestionItem.id = nil;
+QuestionItem.question = '';
+QuestionItem.totalViews = '';
+QuestionItem.answer1 = '';
+QuestionItem.answer2 = '';
+QuestionItem.answer3 = '';
+QuestionItem.answer4 = '';
+QuestionItem.answer5 = '';
+QuestionItem.answer6 = '';
+QuestionItem.qtanswer1 = '';
+QuestionItem.qtanswer2 = '';
+QuestionItem.qtanswer3 = '';
+QuestionItem.qtanswer4 = '';
+QuestionItem.qtanswer5 = '';
+QuestionItem.qtanswer6 = '';
+QuestionItem.selectedAnswer = '';
 
-function SyndicationItem:initialize(obj)
+function QuestionItem:initialize(obj)
 	
 	--Open data.db.  If the file doesn't exist it will be created
 	local path = system.pathForFile("data.db", system.DocumentsDirectory)
@@ -40,16 +40,7 @@ function SyndicationItem:initialize(obj)
 	self.qtanswer5 = obj.qtanswer5;
 	self.qtanswer6 = obj.qtanswer6;	
 	self.completed = 0;	
-	
-	--[[ self.title = XmlParser:XmlValue(node, "title")
-	self.link = XmlParser:XmlValue(node, "link")
-	self.description = XmlParser:XmlValue(node, "description")
-	self.updatedDate = XmlParser:XmlValue(node, "a10:updated")
-	
-	local enclosure = XmlParser:XmlAttributes(node, "enclosure")
-	if enclosure then self.enclosureUrl = enclosure.url end
-	--]]
-	
+
 	local tablesetup = [[CREATE TABLE IF NOT EXISTS questions (id INTEGER PRIMARY KEY, question, totalViews, answer1, answer2, answer3, answer4, answer5, answer6, qtanswer1, qtanswer2, qtanswer3, qtanswer4, qtanswer5, qtanswer6, completed, selectedAnswer);]]
 	print(tablesetup)
 	db:exec( tablesetup )

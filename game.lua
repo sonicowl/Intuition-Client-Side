@@ -5,8 +5,8 @@ require("Lib_XmlParser")
 
 -- Classes
 require("Data_UrlLoader")
-require("Rss_SyndicationFeed")
-require("Rss_SyndicationItem")
+require("QuestionsFeed")
+require("QuestionItem")
 
 function new()
 	
@@ -14,9 +14,10 @@ function new()
 	local g = display.newGroup()
 	local question = display.newGroup()
 	local answersGroup = display.newGroup()
+	local questionMarkGroup = display.newGroup()
 	local remainingGroup = display.newGroup()
 	local currentQuestionNumber = 1;
-	
+	local numberOfItems = 1;
 	score = require ("score")
 	
 	local remaining;
@@ -25,97 +26,74 @@ function new()
 
 	local scoreInfo = score.getInfo()
 
-	score.init({
-	x = 40,
-	y = 5}
-	)
-	score.setScore(0)
-
-
-	local bg = display.newImageRect("images/bg.png", 640, 959);
+	local bg = display.newImageRect("images/bg_questions.png", 364, 488);
 	bg:setReferencePoint(display.CenterReferencePoint);
 	bg.x = _W/2; bg.y = _H/2;
 	
 	g:insert(bg);
+	
+	local homeIcon = display.newImage ("images/home_icon.png", 38, 32)
+	homeIcon.x = 30
+	homeIcon.y = 20
+	g:insert(homeIcon)
+	
+	
 	--------------------------------------------------------------------------
 	--								SCORE									--
 	--------------------------------------------------------------------------
+	
+	-- SET SCORE. Have to define where it will be located
+
+		score.init({
+		x = 300,
+		y = 20}
+		)
+		score.setScore(0)
+
+
 
 	local callback = function(rss)
-		syndication = SyndicationFeed:new("NRK Feed")
-		syndication:parseFeed(rss)
+		questionsFeed = QuestionsFeed:new("Questions")
+		questionsFeed:parseFeed(rss)
 	
-		local items = syndication:getItems()
-		
+		local items = questionsFeed:getItems()
+		print('remainning' .. table.getn(items))
 		if (table.getn(items)>1) then
 			-- we have a next question --
 			
 			---How many questions left?
-			print (table.getn(items));
 
-			getCurrentQuestion(currentQuestionNumber);
+			setCurrentQuestion(currentQuestionNumber);
+			print('number of items' .. table.getn(items))
 			
-			local remainingItems = syndication:getItems()
 
-			numberOfItems = table.getn(remainingItems)/2;
-
-
-			remaining = display.newText (numberOfItems, 25,455, native.systemFont, 12)
+			remaining = display.newText (numberOfItems .. ' of 30', 134,13, native.systemFont, 12)
 			remaining:setTextColor(255,255,255)
 			--> Line one of the question
 			remainingGroup:insert(remaining)
 			g:insert(remainingGroup)
 			
 		end
-		--[[
-		for i=1, #items do
-		local item = items[i]
-			print(i .. "-" .. item.question);
-			local itemGroup = display.newGroup()
-			local title = display.newText(item.question, 10, 10, "Helvetica", 16)
-			itemGroup:insert(title)
-			itemGroup.y = 10 + (40 * (i-1))
-			g:insert(itemGroup) 
-		end
-		--]]
+
 	end
 	
-	function getCurrentQuestion(n)
+	function setCurrentQuestion(n)
 		
 		--------------------------------------------------------------------------
 		--								QUESTION								--
 		--------------------------------------------------------------------------
 		current = nil;
 		-- Get Current Question
-		current = syndication:getItems()
-		current = syndication:getCurrentItem(n)
-		
+		current = questionsFeed:getCurrentItem(n)
 		print (current.question);
 		
-	--[[	TextCandy.AddCharset("questionFont", "questions_alphabet", "questions_alphabet.png", "ABCDEFGHIJKLMNOPQRSTUVWXYZ", 32) --]]
+		local question1 = autoWrappedText(current.question, nil, 14, {255, 255, 255}, 270)
 		
-				TextCandy.AddCharset("questionFont", "questions_alphabet", "questions_alphabet.png", "A", 32)
-				
-		local question1 = TextCandy.CreateText({
-			fontName 	= "questionFont",
-			x		= 50,
-			y		= 50,
-			text	 	= "A",
-			originX	 	= 25,
-			originY	 	= 60,
-			textFlow 	= "LEFT",
-			wrapWidth	= 350,
-			charSpacing 	= -12,
-			lineSpacing	= 0,
-			showOrigin 	= false
-			})
-		
-	--[[	local question1 = display.newText (current.question, 25,60, native.systemFont, 12)
-		question1:setTextColor(255,255,255)
-		--> Line one of the question --]]
+		question1.y = 55;
+		question1.x = 20;
 		
 		question:insert(question1)
-		answer1 = nil
+		
 		--------------------------------------------------------------------------
 		--								ANSWERS									--
 		--------------------------------------------------------------------------
@@ -167,59 +145,66 @@ function new()
 		question:insert(answer6)
 		answer6:addEventListener("touch", selectAnswer)
 		
-		--> Places all three answer buttons and inserts them into localGroup
+		--> Places all six answer buttons and inserts them into localGroup
 		---------------------------------------------------------------------------
 
-	--[[	local a1 = display.newText (current.answer1, 105, 112, native.systemFont, 14)
-		a1:setTextColor (255,255,255) ]]
-		
-		
-		local a1 = TextCandy.CreateText({
-			fontName 	= "questionFont",
-			x		= 105,
-			y		= 112,
-			text	 	= "AAAAAA",
-			originX	 	= 0,
-			originY	 	= 0,
-			textFlow 	= "LEFT",
-			wrapWidth	= 350,
-			charSpacing 	= -12,
-			lineSpacing	= 0,
-			showOrigin 	= false
-			})
-		
-		
-		
+		local a1 = display.newText (current.answer1, 105, 112, "Helvetica", 14)
+		a1:setTextColor (255,255,255) 
 		question:insert(a1)
-		
-		
-		
-		
-		
-		
-		local a2 = display.newText (current.answer2, 105, 162, native.systemFont, 14)
+
+		local a2 = display.newText (current.answer2, 105, 162, "Helvetica", 14)
 		a2:setTextColor (255,255,255)
 		question:insert(a2)
 
-		local a3 = display.newText (current.answer3, 105, 212, native.systemFont, 14)
+		local a3 = display.newText (current.answer3, 105, 212, "Helvetica", 14)
 		a3:setTextColor (255,255,255)
 		question:insert(a3)
 		
-		local a4 = display.newText (current.answer4, 105, 262, native.systemFont, 14)
+		local a4 = display.newText (current.answer4, 105, 262, "Helvetica", 14)
 		a4:setTextColor (255,255,255)
 		question:insert(a4)
 		
-		local a5 = display.newText (current.answer5, 105, 312, native.systemFont, 14)
+		local a5 = display.newText (current.answer5, 105, 312, "Helvetica", 14)
 		a5:setTextColor (255,255,255)
 		question:insert(a5)
 		
-		local a6 = display.newText (current.answer6, 105, 362, native.systemFont, 14)
+		local a6 = display.newText (current.answer6, 105, 362, "Helvetica", 14)
 		a6:setTextColor (255,255,255)
 		question:insert(a6)
+		
 		--> Inserts text on each button, puts text in localGroup
 		---------------------------------------------------------------------------
 		
+		
+		local a1 = display.newText ("?", 54, 113, "Helvetica", 14)
+		a1:setTextColor(255,255,255)
+		questionMarkGroup:insert(a1)
+		
+		local a2 = display.newText ("?", 54, 163, "Helvetica", 14)
+		a2:setTextColor(255,255,255)
+		questionMarkGroup:insert(a2)
+
+		local a3 = display.newText ("?", 54, 213, "Helvetica", 14)
+		a3:setTextColor(255,255,255)
+		questionMarkGroup:insert(a3)
+		
+		local a4 = display.newText ("?", 54, 263, "Helvetica", 14)
+		a4:setTextColor(255,255,255)
+		questionMarkGroup:insert(a4)
+		
+		local a5 = display.newText ("?", 54, 313, "Helvetica", 14)
+		a5:setTextColor(255,255,255)
+		questionMarkGroup:insert(a5)
+		
+		local a6 = display.newText ("?", 54, 363, "Helvetica", 14)
+		a6:setTextColor(255,255,255)
+		questionMarkGroup:insert(a6)
+		
+		
 		g:insert(question);
+		
+		g:insert(questionMarkGroup);
+		
 		
 	end
 	
@@ -234,7 +219,7 @@ function new()
 		--- show results
 		showResults()
 		--- mark question as completed
-		syndication:setCompleted()
+		questionsFeed:setCompleted()
 		--- mark which question was selected - 1 - 6
 
 
@@ -242,29 +227,33 @@ function new()
 	end
 	
 	function showResults()
+		
+		cleanGroup( questionMarkGroup )
+		questionMarkGroup = nil
+		questionMarkGroup = display.newGroup();
 		--> Places all three answer buttons and inserts them into localGroup
 		---------------------------------------------------------------------------
-		local a1 = display.newText (current.qtanswer1, 280, 110, native.systemFont, 14)
+		local a1 = display.newText (current.qtanswer1, 54, 113, "Helvetica", 14)
 		a1:setTextColor(255,255,255)
 		answersGroup:insert(a1)
 		
-		local a2 = display.newText (current.qtanswer2, 280, 160, native.systemFont, 14)
+		local a2 = display.newText (current.qtanswer2, 54, 163, "Helvetica", 14)
 		a2:setTextColor(255,255,255)
 		answersGroup:insert(a2)
 
-		local a3 = display.newText (current.qtanswer3, 280, 210, native.systemFont, 14)
+		local a3 = display.newText (current.qtanswer3, 54, 213, "Helvetica", 14)
 		a3:setTextColor(255,255,255)
 		answersGroup:insert(a3)
 		
-		local a4 = display.newText (current.qtanswer4, 280, 260, native.systemFont, 14)
+		local a4 = display.newText (current.qtanswer4, 54, 263, "Helvetica", 14)
 		a4:setTextColor(255,255,255)
 		answersGroup:insert(a4)
 		
-		local a5 = display.newText (current.qtanswer5, 280, 310, native.systemFont, 14)
+		local a5 = display.newText (current.qtanswer5, 54, 313, "Helvetica", 14)
 		a5:setTextColor(255,255,255)
 		answersGroup:insert(a5)
 		
-		local a6 = display.newText (current.qtanswer6, 280, 360, native.systemFont, 14)
+		local a6 = display.newText (current.qtanswer6, 54, 363, "Helvetica", 14)
 		a6:setTextColor(255,255,255)
 		answersGroup:insert(a6)
 		
@@ -280,9 +269,9 @@ function new()
 			
 			g:remove(remaining)
 			
-			numberOfItems = numberOfItems - 1;
+			numberOfItems = numberOfItems + 1;
 			
-			remaining = display.newText (numberOfItems, 25,455, native.systemFont, 12)
+			remaining = display.newText (numberOfItems .. ' of 30', 134,13, native.systemFont, 12)
 			remaining:setTextColor(255,255,255)
 			g:insert(remaining);
 			
@@ -291,20 +280,20 @@ function new()
 			question = nil
 			question = display.newGroup();
 			--- insert new question
-			getCurrentQuestion(currentQuestionNumber)
+			setCurrentQuestion(currentQuestionNumber)
 			currentQuestionNumber = currentQuestionNumber+1;
 			
 		end
 	end
 	
-	local next = display.newImage("next.png")
-	next.x = 260
-	next.y = 35
+	local next = display.newImage("images/next_question.png")
+	next.x = 220
+	next.y = 435
 	g:insert(next)
 	next:addEventListener("touch", getNextQuestion)
 
-	
-	UrlLoader:new("http://localhost/intuition_rest/public/question/format/json", callback)
+	--[[Get List of Questions from Server ]]
+	UrlLoader:new("http://localhost/intuition.json", callback)
 	
 	return g
 end
