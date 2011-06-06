@@ -5,9 +5,34 @@ require "analytics"
 display.setStatusBar( display.HiddenStatusBar ) 
 
 function new()
+	local openfeint = require("openfeint")
+	---------------------------------------------------------------------------------------------------
+	-- NOTE: To create an OpenFeint-enabled game, first log into OpenFeint and create a new OpenFeint 
+	-- application. That will give you the "Product Key", "Product Secret" and "Client Application ID" strings that should be 
+	-- used in the following lines:
+
+	local of_product_key = "hdYGMSj3JyOYkMGaSFBQ"
+	local of_product_secret = "30NR5kz9jzSqyluQR6eO9dlFAA9K5BjXATUOBSUIlI"
+	local of_app_id = "296642"
+
+	---------------------------------------------------------------------------------------------------
+
+	if openfeint then
+		if ( of_product_key and of_product_secret ) then
+			openfeint.init( of_product_key, of_product_secret, "Test Display Name", of_app_id )
+		else
+			local function onComplete( event )
+				system.openURL( "http://www.openfeint.com/developers" )
+			end
+			native.showAlert( "OpenFeint Init Failed", "To use OpenFeint in your game, you need to get a product key and product secret. This can be done on the OpenFeint website.", { "Learn More" }, onComplete )
+		end
+	else
+		native.showAlert( "OpenFeint Init Failed", "This feature is currently supported on iOS only. To test OpenFeint, create a build for an iOS device or the Xcode Simulator.", { "OK" } )
+	end
+	
+	---------------------------------------------------------------------------------------------------
 	
 	local ui = require("ui")
-	local facebook = require("facebook")
 	local json = require("Json")
 	local tableView = require("tableView")
 		
@@ -18,7 +43,7 @@ function new()
 		
 		
 	-- Facebook Commands
-	local fbCommand			-- forward reference
+	--[[local fbCommand			-- forward reference
 	local LOGOUT = 1
 	local SHOW_DIALOG = 2
 	local POST_MSG = 3
@@ -29,32 +54,7 @@ function new()
 	
 	local appId  = "163467883714718"	-- Add  your App ID here
 	local apiKey = "2419fcf7cdc2774b997a5a39f50b7764"	-- Not needed at this time
-		
-	
-	-- This function is useful for debugging problems with using FB Connect's web api,
-	-- e.g. you passed bad parameters to the web api and get a response table back
-	local function printTable( t, label, level )
-		if label then print( label ) end
-		level = level or 1
 
-		if t then
-			for k,v in pairs( t ) do
-				local prefix = ""
-				for i=1,level do
-					prefix = prefix .. "\t"
-				end
-
-				print( prefix .. "[" .. tostring(k) .. "] = " .. tostring(v) )
-				if type( v ) == "table" then
-					print( prefix .. "{" )
-					printTable( v, nil, level + 1 )
-					print( prefix .. "}" )
-				end
-			end
-		end
-	end
-	
-	--[[
 	local StatusMessageY = 420	
 	
 	local function createStatusMessage( message, x, y )
@@ -80,7 +80,7 @@ function new()
 
 	local statusMessage = createStatusMessage( "   Not connected  ", 0.5*display.contentWidth, StatusMessageY )
 	--]]
-	
+	--[[
 	textObj = display.newText('', 80, 420, native.systemFontBold, 24 )
 
 	local callFacebook = function()
@@ -90,15 +90,7 @@ function new()
 					textObj = nil;
 					textObj = display.newText('connected', 130, 420, native.systemFontBold, 24 )
 					textObj:setTextColor( 255,255,255 )
-					
-				--[[	local theMessage = "I just took the Zombie Survival Test! I scored " .. score .. " points!"
 
-						facebook.request( "me/feed", "POST", {
-						message=theMessage,
-						name="Do you think you can beat my score?",
-						caption="Play YOURAPPNAME now to find out!",
-						link="http://itunes.apple.com/us/app/your-app-name/id1234567890?mt=8",
-						picture="http://yoursite.com/yourimage.png" } )--]]
 				end
 			end
 		end 
@@ -106,49 +98,46 @@ function new()
 	end
 	
 	callFacebook();
-	
+	--]]
 		
 	local localGroup = display.newGroup();
 	
-	local bg = display.newImageRect("images/bg.png", 640, 959);
+	local bg = display.newImage("images/screen1_bg.png", 768, 1024, true);
 	bg:setReferencePoint(display.CenterReferencePoint);
 	bg.x = _W/2; bg.y = _H/2;
 	
-	local logo = display.newImageRect("images/logo.png", 265, 61);
-	logo:setReferencePoint(display.CenterReferencePoint);
-	logo.x = _W/2 - 3; logo.y = logo.height+20;
-
-	local play_btn = display.newImageRect("images/btn_new_game.png", 287, 73);
+	
+	local play_btn = display.newImage("images/btn_newtest.png", 702, 70, true);
 	play_btn:setReferencePoint(display.CenterReferencePoint);
-	play_btn.x = _W/2; play_btn.y = _H/5 + play_btn.height;
+	play_btn.x = _W/2; play_btn.y = _H/4 + play_btn.height*1.5;
 	play_btn.scene = "game";
 	
 	
-	local instructions_btn = display.newImageRect("images/btn_instructions.png", 287, 73);
-	instructions_btn:setReferencePoint(display.CenterReferencePoint);
-	instructions_btn.x = _W/2; instructions_btn.y = play_btn.y + play_btn.height;
-	instructions_btn.scene = "instructions";
+	local achievements_btn = display.newImageRect("images/btn_achievements.png", 702, 70);
+	achievements_btn:setReferencePoint(display.CenterReferencePoint);
+	achievements_btn.x = _W/2; achievements_btn.y = play_btn.y + play_btn.height+30;
+	achievements_btn.scene = "instructions";
 	
-	local results_btn = display.newImageRect("images/btn_results.png", 287, 73);
-	results_btn:setReferencePoint(display.CenterReferencePoint);
-	results_btn.x = _W/2; results_btn.y = instructions_btn.y + instructions_btn.height;
-	results_btn.scene = "results";
 	
-	local leaderboard_btn = display.newImageRect("images/btn_leaderboard.png", 287, 73);
+	local leaderboard_btn = display.newImageRect("images/btn_leaderboard.png", 702, 70);
 	leaderboard_btn:setReferencePoint(display.CenterReferencePoint);
-	leaderboard_btn.x = _W/2; leaderboard_btn.y = results_btn.y + results_btn.height;
+	leaderboard_btn.x = _W/2; leaderboard_btn.y = achievements_btn.y + achievements_btn.height + 30;
 	leaderboard_btn.scene = "instructions";
+	
+	
+	local instructions_btn = display.newImageRect("images/btn_instructions.png", 702, 70);
+	instructions_btn:setReferencePoint(display.CenterReferencePoint);
+	instructions_btn.x = _W/2; instructions_btn.y = leaderboard_btn.y + leaderboard_btn.height + 30;
+	instructions_btn.scene = "instructions";
 
-	
- 	local logic_diner = nil;
-	
 	localGroup:insert(bg);
-	localGroup:insert(logo);
 	localGroup:insert(play_btn);
-	localGroup:insert(instructions_btn)
-	localGroup:insert(results_btn);
+	localGroup:insert(achievements_btn);
 	localGroup:insert(leaderboard_btn)
-	localGroup:insert(textObj)
+	localGroup:insert(instructions_btn)
+	
+--	localGroup:insert(results_btn);
+--	localGroup:insert(textObj)
 	
 	function changeScene(e)
 		if(e.phase == "ended") then
@@ -159,10 +148,34 @@ function new()
 		
 	end
 	
-	play_btn:addEventListener("touch", changeScene);
-	instructions_btn:addEventListener("touch", changeScene);
-	results_btn:addEventListener("touch", changeScene);
-	leaderboard_btn:addEventListener("touch", changeScene);
+	function goButton(event)
+		local options = { 
+		  baseUrl = system.ResourceDirectory, 
+		  hasBackground = false, 
+		  urlRequest = listener 
+		}
 		
+		if event.phase == "ended" then
+			native.showWebPopup( "test.html", options )		
+		end
+	end
+	
+	local function openOpenFeintLeaderBoard (event)
+		if event.phase == "ended" then
+			openfeint.launchDashboard('leaderboards')
+		end
+	end
+	
+	local function openOpenFeintAchievements(event)
+		if event.phase == "ended" then
+			openfeint.launchDashboard('achievements')
+		end
+	end
+	
+	
+	play_btn:addEventListener("touch", changeScene);
+ 	instructions_btn:addEventListener("touch", changeScene);
+	achievements_btn:addEventListener("touch", openOpenFeintAchievements);
+	leaderboard_btn:addEventListener("touch", openOpenFeintLeaderBoard);
 	return localGroup;
 end

@@ -142,8 +142,8 @@ function newPie(params)
 	chart.titleColour = params.titleColour or "000000"
 	chart.titleFontSize = params.titleFontSize or 11.5
 	chart.data = params.data or ""
-	chart.width = params.width or 200
-	chart.height = params.height or chart.width
+	chart.width = 250
+	chart.height = 250
 	chart.legend = params.legend or ""
 	chart.legendPosition = params.legendPosition or "r"
 	chart.legendSize = params.legendSize

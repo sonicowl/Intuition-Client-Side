@@ -1,8 +1,6 @@
 require("cleangroup")
 require "toggle"
 
-TextCandy = require("lib_text_candy")
-
 display.setStatusBar( display.HiddenStatusBar ) 
 
 _W = display.contentWidth;
@@ -25,7 +23,7 @@ end
 function autoWrappedText(text, font, size, color, width)
 --print("text: " .. text)
   if text == '' then return false end
-  font = font or native.systemFont
+  font = Helvetica
   size = tonumber(size) or 12
   color = color or {255, 255, 255}
   width = width or display.stageWidth

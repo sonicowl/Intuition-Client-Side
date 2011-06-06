@@ -31,7 +31,7 @@ function QuestionsFeed:parseFeed(xml)
 					local jsonObj = {}
 					jsonObj.id = v2.id;
 					jsonObj.question = v2.question;
-					jsonObj.totalViews = v2.totalViews;
+					jsonObj.totalViews = v2.totalviewsfake;
 					jsonObj.answer1 = v2.answer1;
 					jsonObj.answer2 = v2.answer2;
 					jsonObj.answer3 = v2.answer3;

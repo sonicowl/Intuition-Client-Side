@@ -1,16 +1,34 @@
-application =
-{
-        content =
-        {
-                width = 320,
-                height = 480,
-                scale = "letterbox",
-                
-				imageSuffix =
-				{
-					["-x15"] = 1.5,		-- A good scale for Droid, Nexus One, etc.
-					["-x2"] = 2,		-- A good scale for iPhone 4 and iPad
-				},
-		},
+-- build.settings
 
+settings =
+{
+	orientation =
+	{
+		default = "portrait",
+	},
+
+	iphone =
+	{
+		plist =
+		{
+	        CFBundleIconFile = "Icon.png",
+	        CFBundleIconFiles = {
+	           "Icon.png", 
+	           "Icon-72.png", 
+	        },
+		},
+	}
+}settings = {
+	iphone =
+	{
+		plist =
+		{
+			UIApplicationExitsOnSuspend = true,
+	        CFBundleIconFile = "Icon.png",
+	        CFBundleIconFiles = {
+	           "Icon.png", 
+	           "Icon-72.png", 
+	        },
+		},
+	}
 }

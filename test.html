@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+    <head>
+		<meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+        <title>Results</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="author" content="Dmitry Baranovskiy">
+        <meta name="description" content="Charting JavaScript Library">
+        <link rel="stylesheet" href="demo.css" type="text/css" media="screen" charset="utf-8">
+        <script src="raphael.js" type="text/javascript" charset="utf-8"></script>
+        <script src="g.raphael.js" type="text/javascript" charset="utf-8"></script>
+        <script src="g.pie.js" type="text/javascript" charset="utf-8"></script>
+        <script type="text/javascript" charset="utf-8">
+            window.onload = function () {
+	
+				function gup( name )
+				{
+				  name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+				  var regexS = "[\\?&]"+name+"=([^&#]*)";
+				  var regex = new RegExp( regexS );
+				  var results = regex.exec( window.location.href );
+				  if( results == null )
+				    return "";
+				  else
+				    return results[1];
+				}
+				
+				var param1 = gup('param1');
+				var param2 = gup('param2');
+				var param3 = gup('param3');
+				var param4 = gup('param4');
+				var param5 = gup('param5');
+				var param6 = gup('param6');
+				var total = param1+param2+param3+param4+param5+param6;
+                var r = Raphael("holder");
+                r.g.txtattr.font = "12px 'Fontin Sans', Fontin-Sans, sans-serif";
+              /*  r.g.text(10, 70, param1).attr({"font-size": 20});
+                r.g.text(10, 100, param2).attr({"font-size": 20});
+                r.g.text(10, 130, param3).attr({"font-size": 20});
+                r.g.text(10, 160, param4).attr({"font-size": 20});
+                r.g.text(10, 190, param5).attr({"font-size": 20});
+                r.g.text(10, 220, param6).attr({"font-size": 20}); */
+
+                r.g.piechart(155, 150, 150, [param1/total, param2/total, param3/total, param4/total, param5/total, param6/total]);
+            };
+        </script>
+    </head>
+    <body class="raphael" id="g.raphael.dmitry.baranovskiy.com">
+        <div id="holder"></div>
+
+    </body>
+</html>

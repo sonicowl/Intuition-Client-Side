@@ -1,4 +1,12 @@
-settings = {
+-- build.settings
+
+settings =
+{
+	orientation =
+	{
+		default = "portrait",
+	},
+
 	iphone =
 	{
 		plist =
@@ -6,7 +14,19 @@ settings = {
 	        CFBundleIconFile = "Icon.png",
 	        CFBundleIconFiles = {
 	           "Icon.png", 
-	           "Icon@2x.png", 
+	           "Icon-72.png", 
+	        },
+		},
+	}
+}settings = {
+	iphone =
+	{
+		plist =
+		{
+			UIApplicationExitsOnSuspend = true,
+	        CFBundleIconFile = "Icon.png",
+	        CFBundleIconFiles = {
+	           "Icon.png", 
 	           "Icon-72.png", 
 	        },
 		},
